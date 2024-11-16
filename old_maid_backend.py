@@ -1,7 +1,7 @@
 import random #random card selections, etc.
 import time #will use this to make the game run at an enjoyable pace
 
-class Card:
+class Card: #we will use this class to make card objects, with wich to populate the deck.
     SUITS = ['♠', '♡', '♢', '♣']
     RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 
@@ -16,7 +16,8 @@ class Card:
     def __str__(self):
         return f"{self.rank}{self.suit}"
 
-class Deck:
+
+class Deck: #When we populate the deck with all existing cards, they will be distributed to the players
     def __init__(self):
         self.cards = []
         for suit in Card.SUITS:  #for every suit
@@ -25,6 +26,10 @@ class Deck:
     
     def shuffle_deck(self):
         random.shuffle(self.cards) #https://www.w3schools.com/python/ref_random_shuffle.asp
+
+    def draw_card(self):
+        if self.cards: #"if the deck has been populated, please take out a card from there"
+            return self.cards.pop() #inspired by Jeff's code. Pop provides a convenient way of removing the last item in a list
 
 
 class Hand: #(player)

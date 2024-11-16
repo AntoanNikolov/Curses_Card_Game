@@ -40,8 +40,9 @@ class Hand: #(player)
     def add_card(self, card): #add card object to the hand of the player
         self.cards.append(card)
     
-    def remove_card(self,card): #remove card object from the hand of the player
-        pass
+    def remove_card(self, index): #remove card object from the hand of the player at given index. Index is random when it is a bot's turn.
+        if 0 <= index < len(self.cards):
+            return self.cards.pop(index)
 
     def remove_matches(self):
         pass
@@ -79,5 +80,5 @@ class Game:
             else:
                 return False
 
-    def play_turns(self):
+    def play_turns(self): #here is where stuff starts happening
         pass

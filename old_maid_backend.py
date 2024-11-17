@@ -19,7 +19,12 @@ class Deck: #When we populate the deck with all existing cards, they will be dis
         for suit in Card.SUITS:  #for every suit
             for rank in Card.RANKS:  #for every number value
                 self.cards.append(Card(rank, suit))  #add a card to the deck with that rank and suit
-    
+        #remove one queen
+        for card in self.cards:
+            if card.rank == 'Q' and card.suit == '♣':
+                self.cards.remove(card)
+                break
+
     def shuffle_deck(self):
         random.shuffle(self.cards) #https://www.w3schools.com/python/ref_random_shuffle.asp
 
@@ -45,10 +50,9 @@ class Hand: #(player)
         self.cards.sort(key=lambda card: card.rank) #found this online, rarely ever used a function like this before so I needed help
         unpaired = []
         i = 0
-        while i < len(self.cards): #while we have not iterated through the whole list
-            if i < len(self.cards)-1: #making sure we don't get an error with the index being out of range
-                if self.cards[i] == self.cards[i+1]: #checks if the cards next to each other can be paired
-                    i +=2 #disregard the pair if there is one
+        while i < len(self.cards)-1: #while we have not iterated through the whole list
+            if self.cards[i] == self.cards[i+1]: #checks if the cards next to each other can be paired
+                i +=2 #disregard the pair if there is one
             
             else:
                 unpaired.append(self.cards[i]) #only keeping the cards that do not have pairs
@@ -83,7 +87,7 @@ class Game:
 
     def check_winner(self):
         for player in self.players:
-            if player.cards == []:
+            if len(player.cards) == 0:
                 print(player.name , "is out of cards and wins!")
                 return True
             else:

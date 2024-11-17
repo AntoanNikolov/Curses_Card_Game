@@ -44,8 +44,21 @@ class Hand: #(player)
         if 0 <= index < len(self.cards):
             return self.cards.pop(index)
 
-    def remove_matches(self):
-        pass
+    def remove_matches(self): #i was getting confused a lot here, not sure if it handles iteration properly
+        #sort cards to prepare for dealing with pairs
+        self.cards.sort(key=lambda card: card.rank) #found this online, rarely ever used a function like this before so I needed help
+        unpaired = []
+        i = 0
+        while i < len(self.cards): #while we have not iterated through the whole list
+            if i < len(self.cards)-1: #making sure we don't get an error with the index being out of range
+                if self.cards[i] == self.cards[i+1]: #checks if the cards next to each other can be paired
+                    i +=2 #disregard the pair if there is one
+            
+            else:
+                unpaired.append(self.cards[i]) #only keeping the cards that do not have pairs
+                i+=1 #move ahead by one to start searching again
+        random.shuffle(unpaired)
+        self.cards = unpaired
 
     def is_empty(self):
         return len(self.cards) == 0

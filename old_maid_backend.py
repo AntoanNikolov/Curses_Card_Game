@@ -9,10 +9,6 @@ class Card: #we will use this class to make card objects, with wich to populate 
         self.rank = rank
         self.suit = suit
 
-    def is_equal(self, other):
-        return self.rank == other.rank #compare ranks for forming matches
-
-    
     def __str__(self):
         return f"{self.rank}{self.suit}"
 

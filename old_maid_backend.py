@@ -76,7 +76,11 @@ class Game:
         self.deck = Deck() #deck object for the game to use
     
     def start_play(self, names):
-        pass
+        for name in names:
+            self.players.append(Hand(name))
+        self.deck.shuffle() #randomize the deck before we deal
+        self.deal()
+        self.remove_all_matches
 
     def deal(self):
         pass

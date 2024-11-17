@@ -11,6 +11,8 @@ class Card: #we will use this class to make card objects, with wich to populate 
 
     def __str__(self):
         return f"{self.rank}{self.suit}"
+    
+    ##############################################
 
 
 class Deck: #When we populate the deck with all existing cards, they will be distributed to the players
@@ -31,6 +33,8 @@ class Deck: #When we populate the deck with all existing cards, they will be dis
     def draw_card(self):
         if self.cards: #"if the deck has been populated, please take out a card from there"
             return self.cards.pop() #inspired by Jeff's code. Pop provides a convenient way of removing the last item in a list
+        else:
+            return None
 
 
 class Hand: #(player)
@@ -44,27 +48,29 @@ class Hand: #(player)
     def remove_card(self, index): #remove card object from the hand of the player at given index. Index is random when it is a bot's turn.
         if 0 <= index < len(self.cards):
             return self.cards.pop(index)
+        else:
+            return None
 
-    def remove_matches(self): #i was getting confused a lot here, not sure if it handles iteration properly
+    def remove_matches(self):
         #sort cards to prepare for dealing with pairs
-        self.cards.sort(key=lambda card: card.rank) #found this online, rarely ever used a function like this before so I needed help
+        self.cards.sort(key=lambda x: x.rank) #found this online, rarely ever used a function like this before so I needed help
         unpaired = []
         i = 0
         while i < len(self.cards)-1: #while we have not iterated through the whole list
-            if self.cards[i] == self.cards[i+1]: #checks if the cards next to each other can be paired
+            if self.cards[i].rank == self.cards[i+1].rank: #checks if the cards next to each other can be paired
                 i +=2 #disregard the pair if there is one
             
             else:
                 unpaired.append(self.cards[i]) #only keeping the cards that do not have pairs
                 i+=1 #move ahead by one to start searching again
+        if i == len(self.cards) - 1:
+            unpaired.append(self.cards[i])
         random.shuffle(unpaired)
         self.cards = unpaired
 
     def __str__(self):
-        print_hand = []
-        for i in self.cards:
-            print_hand.append(i)
-        return print_hand
+        return " ".join(str(card) for card in self.cards) #had to look this up
+
 
 
 class Game:
@@ -73,12 +79,13 @@ class Game:
         self.deck = Deck() #deck object for the game to use
     
     def start_play(self, names): #prepare the game and keep it running unless someone has won
-        for name in names:
-            self.players.append(Hand(name))
+        self.players = [Hand(name) for name in names] #for some reason this syntax is the only thing stopping an error which I do not understand. I had to resort to ChatGPT
         self.deck.shuffle_deck() #randomize the deck before we deal
         self.deal()
         for player in self.players: #remove matches from all players' hands at the start of the game
             player.remove_matches()
+        
+        ####################TODO
 
     def deal(self):
         while self.deck.cards: #while there are still cards in the deck
@@ -88,10 +95,10 @@ class Game:
     def check_winner(self):
         for player in self.players:
             if len(player.cards) == 0:
-                print(player.name , "is out of cards and wins!")
+                print(f"{player.name} has no cards left and wins!")
                 return True
-            else:
-                return False
+        
+        return False
 
     def play_turns(self): #turn logic
         pass

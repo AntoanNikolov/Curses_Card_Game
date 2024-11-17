@@ -60,9 +60,6 @@ class Hand: #(player)
         random.shuffle(unpaired)
         self.cards = unpaired
 
-    def is_empty(self):
-        return len(self.cards) == 0
-
     def __str__(self):
         print_hand = []
         for i in self.cards:
@@ -75,7 +72,7 @@ class Game:
         self.players = []
         self.deck = Deck() #deck object for the game to use
     
-    def start_play(self, names):
+    def start_play(self, names): #prepare the game and keep it running unless someone has won
         for name in names:
             self.players.append(Hand(name))
         self.deck.shuffle() #randomize the deck before we deal
@@ -83,7 +80,9 @@ class Game:
         self.remove_all_matches
 
     def deal(self):
-        pass
+        while self.deck.cards: #while there are still cards in the deck
+            for player in self.players:
+                player.add_card(self.deck.draw_card())
 
     def remove_all_matches(self): #remove matches from all players' hands at the start of the game
         for player in self.players:
@@ -91,11 +90,11 @@ class Game:
 
     def check_winner(self):
         for player in self.players:
-            if player.is_empty():
+            if player.cards == []:
                 print(player.name , "is out of cards and wins!")
                 return True
             else:
                 return False
 
-    def play_turns(self): #here is where stuff starts happening
+    def play_turns(self): #turn logic
         pass

@@ -75,18 +75,15 @@ class Game:
     def start_play(self, names): #prepare the game and keep it running unless someone has won
         for name in names:
             self.players.append(Hand(name))
-        self.deck.shuffle() #randomize the deck before we deal
+        self.deck.shuffle_deck() #randomize the deck before we deal
         self.deal()
-        self.remove_all_matches
+        for player in self.players: #remove matches from all players' hands at the start of the game
+            player.remove_matches()
 
     def deal(self):
         while self.deck.cards: #while there are still cards in the deck
             for player in self.players:
                 player.add_card(self.deck.draw_card())
-
-    def remove_all_matches(self): #remove matches from all players' hands at the start of the game
-        for player in self.players:
-            player.remove_matches()
 
     def check_winner(self):
         for player in self.players:

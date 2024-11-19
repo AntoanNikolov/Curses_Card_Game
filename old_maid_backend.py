@@ -101,4 +101,21 @@ class Game:
         return False
 
     def play_turns(self): #turn logic
-        pass
+        turn = 0
+        max_turns = len(self.players) -1 #i will count using indexes, as list iteration will look a little nicer when coding
+        while check_winner() != True:
+            for i, j in enumerate(self.players):
+                turn = j
+
+                if turn > max_turns: #wrap back around properly after each player has done their first move
+                    turn = 0
+                
+                current_player = self.players[turn]
+                previous_player = self.players[turn-1]
+
+                print(f"It is {current_player}'s turn!")
+                time.sleep(0.4)
+                print(f"{previous_player} has f{len(previous_player.cards)}")
+                time.sleep(0.4)
+                picked_index = int(input(f"Please pick a card from {previous_player} (type 1-{len(previous_player.cards)})"))
+                

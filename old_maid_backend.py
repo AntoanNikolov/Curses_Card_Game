@@ -85,7 +85,7 @@ class Game:
         for player in self.players: #remove matches from all players' hands at the start of the game
             player.remove_matches()
         
-        ####################TODO
+        self.play_turns()  #start the game loop
 
     def deal(self):
         while self.deck.cards: #while there are still cards in the deck
@@ -101,21 +101,50 @@ class Game:
         return False
 
     def play_turns(self): #turn logic
-        turn = 0
-        max_turns = len(self.players) -1 #i will count using indexes, as list iteration will look a little nicer when coding
-        while check_winner() != True:
+        while True:
             for i, j in enumerate(self.players):
-                turn = j
 
-                if turn > max_turns: #wrap back around properly after each player has done their first move
-                    turn = 0
+                turn = i
                 
                 current_player = self.players[turn]
-                previous_player = self.players[turn-1]
+                previous_player = self.players[(turn-1)%len(self.players)]
 
-                print(f"It is {current_player}'s turn!")
-                time.sleep(0.4)
-                print(f"{previous_player} has f{len(previous_player.cards)}")
-                time.sleep(0.4)
-                picked_index = int(input(f"Please pick a card from {previous_player} (type 1-{len(previous_player.cards)})"))
-                
+                if current_player.name == "You":
+                    print("\n Your turn!")
+                    time.sleep(1)
+                    for k in self.players:
+                        print(f"{k.name}: {len(k.cards)} cards.")
+                    time.sleep(1)
+                    print(f"\n You are picking from {previous_player.name}")
+                    time.sleep(0.4)
+                    picked_index = int(input(f"\n Please pick a card from {previous_player.name} (type 1-{len(previous_player.cards)}): ")) -1
+                    time.sleep(0.4)
+                    
+                    picked_card = previous_player.cards.pop(picked_index)
+                    current_player.cards.append(picked_card)
+                    print(f"\n You picked {picked_card.suit} {picked_card.rank} from {previous_player.name}")
+                    self.check_winner()
+
+                else:
+                    print(f"\n {current_player.name}'s turn!")
+                    time.sleep(1)
+
+                    picked_card = random.choice(previous_player.cards)
+                    current_player.cards.append(picked_card)
+                    print(f"{current_player.name} picked a card from {previous_player.name}")
+                    turn+=1
+                    self.check_winner()
+
+                current_player.remove_matches()
+                if self.check_winner():
+                    return #used to exit a function
+
+
+
+def main():
+    game = Game()
+    player_names = ['You', 'Bot 1', 'Bot 2']  #Modify as needed for now
+    game.start_play(player_names)
+
+if __name__ == "__main__":
+    main()

@@ -34,7 +34,7 @@ class Deck: #When we populate the deck with all existing cards, they will be dis
         if self.cards: #"if the deck has been populated, please take out a card from there"
             return self.cards.pop() #inspired by Jeff's code. Pop provides a convenient way of removing the last item in a list
         else:
-            return None
+            raise ValueError("No cards left in the deck to draw.")  #raise an error instead of returning None
 
 
 class Hand: #(player)
@@ -90,6 +90,8 @@ class Game:
     def deal(self):
         while self.deck.cards: #while there are still cards in the deck
             for player in self.players:
+                if not self.deck.cards:  #stop when the deck is empty so we do not raise a ValueError
+                    break
                 player.add_card(self.deck.draw_card())
 
     def check_winner(self):
@@ -112,8 +114,10 @@ class Game:
                 if current_player.name == "You":
                     print("\n Your turn!")
                     time.sleep(1)
+
                     for k in self.players:
                         print(f"{k.name}: {len(k.cards)} cards.")
+
                     time.sleep(1)
                     print(f"\n You are picking from {previous_player.name}")
                     time.sleep(0.4)
@@ -143,7 +147,7 @@ class Game:
 
 def main():
     game = Game()
-    player_names = ['You', 'Bot 1', 'Bot 2']  #Modify as needed for now
+    player_names = ['You', 'Bot 1', 'Bot 2', 'Bot 3']  #Modify as needed for now
     game.start_play(player_names)
 
 if __name__ == "__main__":

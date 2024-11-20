@@ -121,8 +121,20 @@ class Game:
                     time.sleep(1)
                     print(f"\n You are picking from {previous_player.name}")
                     time.sleep(0.4)
-                    picked_index = int(input(f"\n Please pick a card from {previous_player.name} (type 1-{len(previous_player.cards)}): ")) -1
+                    print(f"Your hand contains: ")
+                    for card in current_player.cards:
+                        print(f"{card.suit} {card.rank}")
                     time.sleep(0.4)
+
+                    while True: #infinite loop to keep waiting for a proper input
+                        try:
+                            picked_index = int(input(f"\n Please pick a card from {previous_player.name} (type 1-{len(previous_player.cards)}): ")) -1
+                            time.sleep(0.4)
+                            if 0 <= picked_index < len(previous_player.cards):
+                                break #exit loop if all works out
+                        except:
+                            print("Invalid input, please enter a valid number.")
+
                     
                     picked_card = previous_player.cards.pop(picked_index)
                     current_player.cards.append(picked_card)

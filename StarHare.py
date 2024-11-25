@@ -27,6 +27,7 @@ while key != ord('Q'):
     cursesKey = stdscr.getch
 #File test
     if key == ord('p'):
+        #Coords in the text file, length and hight of the rectangl you want, coords of plancemnt on the terminal, file
         gDifuse(0,10,20,10,0,0,file)
     if key == ord('c'):
         stdscr.clear()

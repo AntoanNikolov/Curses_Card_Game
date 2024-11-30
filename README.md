@@ -1,3 +1,3 @@
 # Curses_Card_Game
-Antoan: Working on the backend  
+Antoan: Waiting for card art to proceed with the curses implementation process  
 Sean: Working on the frontend/curses

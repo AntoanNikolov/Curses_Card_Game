@@ -1,3 +1,3 @@
 # Curses_Card_Game
-Antoan: Waiting for card art to proceed with the curses implementation process  
-Sean: Working on the card art/curses
+Antoan: Transforming the Old Maid code into functional Go Fish code. Afterward, implement curses.  
+Sean: Make the frontend design look better.

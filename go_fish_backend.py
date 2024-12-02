@@ -21,11 +21,6 @@ class Deck: #When we populate the deck with all existing cards, they will be dis
         for suit in Card.SUITS:  #for every suit
             for rank in Card.RANKS:  #for every number value
                 self.cards.append(Card(rank, suit))  #add a card to the deck with that rank and suit
-        #remove one queen
-        for card in self.cards:
-            if card.rank == 'Q' and card.suit == '♣':
-                self.cards.remove(card)
-                break
 
     def shuffle_deck(self):
         random.shuffle(self.cards) #https://www.w3schools.com/python/ref_random_shuffle.asp
@@ -45,11 +40,19 @@ class Hand: #(player)
     def add_card(self, card): #add card object to the hand of the player
         self.cards.append(card)
     
-    def remove_card(self, index): #remove card object from the hand of the player at given index. Index is random when it is a bot's turn.
-        if 0 <= index < len(self.cards):
-            return self.cards.pop(index)
-        else:
-            return None
+    def remove_card_by_rank(self, rank): #remove card object from the hand of the player at given rank. Rank is random when it is a bot's turn.
+        matching_cards = []
+        for card in self.cards:
+            if card.rank == rank:
+                matching_cards.append(card)
+        new_cards = []
+        for card in self.cards:
+            if card.rank != rank:
+                new_cards.append(card)
+        self.cards = new_cards
+        return matching_cards
+        
+        
 
     def remove_matches(self):
         #sort cards to prepare for dealing with pairs

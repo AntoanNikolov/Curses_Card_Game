@@ -33,7 +33,6 @@ class Deck: #When we populate the deck with all existing cards, they will be dis
         else:
             raise ValueError("No cards left in the deck to draw.")  #raise an error instead of returning None
 
-#################################WORKSWORKSWORKSWORKS ^^^^^^^^^^^^
 class Hand: #(player)
     def __init__(self, name):
         self.name = name
@@ -44,7 +43,7 @@ class Hand: #(player)
         self.cards.append(card)
     
     def remove_card_by_rank(self, rank): #remove card object from the hand of the player at given rank and refresh their deck. Store the card that was taken from the player in correctly_picked_cards.
-        correctly_picked_cards = []
+        correctly_picked_cards = [] #makes code below that uses extend sort of inneficient, but it works here so I'll keep this. I had forgotten you could only get one card from an opponent at a time
         for card in self.cards:
             if card.rank == rank: #if the card the player picked exists in the opponents hand:
                 correctly_picked_cards.append(card) #grab that card from the opponent and store it in this list
@@ -63,7 +62,7 @@ class Hand: #(player)
             j = i + 1 #second card
             while j < len(self.cards):
                 if self.cards[i].rank == self.cards[j].rank:
-                    self.pairs.append((self.cards[i], self.cards[j]))
+                    self.pairs.append((self.cards[i].rank, self.cards[i].suit))
                     self.cards.remove(self.cards[j])
                     self.cards.remove(self.cards[i])
                     i -= 1  #adjust index to account for removed elements. This method could be flawed, I will revisit to make sure this adjustment works.
@@ -142,12 +141,12 @@ class Game:
                     correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
                     if correctly_picked_cards: #if you have picked a card correctly
                         print(f"{previous_player.name} gives you: {', '.join(str(card) for card in correctly_picked_cards)}") #once again found this type of syntax online
-                        current_player.cards.extend(correctly_picked_cards)
+                        current_player.cards.extend(correctly_picked_cards) #inneficient due to using a list, but I will keep this since it works. I had forgotten we can only ask for one card at a time.
 
                     else: #unsuccesful pick
                         print(f"{previous_player.name} says: 'Go Fish!'")
                         drawn_card = self.deck.draw_card()
-                        if drawn_card:
+                        if drawn_card: #might be redundant, will remove later
                             print(f"You drew: {drawn_card}")
                             current_player.add_card(drawn_card)
 
@@ -155,13 +154,14 @@ class Game:
                     print(f"\n {current_player.name}'s turn!")
                     time.sleep(1)
 
-                    picked_rank = random.choice(previous_player.cards).rank
+                    picked_rank = random.choice(current_player.cards).rank
                     print(f"{current_player.name} asks: 'Do you have any {picked_rank}s?'")
+                    time.sleep(0.4)
                     
                     correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
                     if correctly_picked_cards:
                         print(f"You give {current_player.name}: {', '.join(str(card) for card in correctly_picked_cards)}")
-                        current_player.cards.extend(correctly_picked_cards)
+                        current_player.cards.extend(correctly_picked_cards) #inneficient due to using a list, but I will keep this since it works. I had forgotten we can only ask for one card at a time.
                     
                     else:
                         print("You exclaim: 'Go Fish!'")
@@ -171,6 +171,13 @@ class Game:
                             current_player.add_card(drawn_card)
 
                 current_player.find_pairs()
+            
+                all_pairs = []
+                for i in self.players:
+                    all_pairs.extend(i.pairs)
+                
+                print(f"All pairs are {all_pairs}")
+
                 if self.check_winner():
                     return #used to exit a function
 

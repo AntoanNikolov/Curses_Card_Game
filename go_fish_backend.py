@@ -78,16 +78,15 @@ class Game:
         self.deck.shuffle_deck() #randomize the deck before we deal
         self.deal()
         for player in self.players: #remove matches from all players' hands at the start of the game
-            player.remove_matches()
+            player.find_pairs()
         
         self.play_turns()  #start the game loop
 
     def deal(self):
-        while self.deck.cards: #while there are still cards in the deck
+        for i in range(7): #deal 7 cards per player
             for player in self.players:
-                if not self.deck.cards:  #stop when the deck is empty so we do not raise a ValueError
-                    break
-                player.add_card(self.deck.draw_card())
+                card = self.deck.draw_card()
+                player.add_card(card)
 
     def check_winner(self):
         for player in self.players:

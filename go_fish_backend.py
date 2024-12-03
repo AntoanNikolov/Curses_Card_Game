@@ -6,6 +6,7 @@ import time #will use this to make the game run at an enjoyable pace
 #extend is unnecessary in some places
 #game is running but nothing is happening (occurs when the play_turns function is called)
 #pop index out of range error
+#find_pairs function logic is flawed
 
 class Card: #we will use this class to make card objects, with wich to populate the deck.
     SUITS = ['♠', '♡', '♢', '♣']
@@ -168,7 +169,7 @@ class Game:
                     picked_rank = random.choice(previous_player.cards).rank
                     print(f"{current_player.name} asks: 'Do you have any {picked_rank}s?'")
                     
-                    correctly_picked_cards = previous_player.remove_cards_by_rank(picked_rank)
+                    correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
                     if correctly_picked_cards:
                         print(f"You give {current_player.name}: {', '.join(str(card) for card in correctly_picked_cards)}")
                         current_player.cards.extend(correctly_picked_cards)
@@ -183,7 +184,6 @@ class Game:
                 current_player.find_pairs()
                 if self.check_winner():
                     return #used to exit a function
-                turn += 1
 
 
 

@@ -3,7 +3,6 @@ import time #will use this to make the game run at an enjoyable pace
 
 
 #IMPORTANT THINGS TO FIX:
-#extend is unnecessary in some places
 #game is running but nothing is happening (occurs when the play_turns function is called)
 #pop index out of range error
 #find_pairs function logic is flawed
@@ -153,7 +152,7 @@ class Game:
                     correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
                     if correctly_picked_cards: #if you have picked a card correctly
                         print(f"{previous_player.name} gives you: {', '.join(str(card) for card in correctly_picked_cards)}") #once again found this type of syntax online
-                        current_player.cards.extend(correctly_picked_cards) #extend allows you to append multiple items at once
+                        current_player.cards.append(correctly_picked_cards)
 
                     else: #unsuccesful pick
                         print(f"{previous_player.name} says: 'Go Fish!'")
@@ -172,7 +171,7 @@ class Game:
                     correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
                     if correctly_picked_cards:
                         print(f"You give {current_player.name}: {', '.join(str(card) for card in correctly_picked_cards)}")
-                        current_player.cards.extend(correctly_picked_cards)
+                        current_player.cards.append(correctly_picked_cards)
                     
                     else:
                         print("You exclaim: 'Go Fish!'")

@@ -1,6 +1,12 @@
 import random #random card selections, etc.
 import time #will use this to make the game run at an enjoyable pace
 
+
+#IMPORTANT THINGS TO FIX:
+#extend is unnecessary in some places
+#game is running but nothing is happening (occurs when the play_turns function is called)
+#pop index out of range error
+
 class Card: #we will use this class to make card objects, with wich to populate the deck.
     SUITS = ['♠', '♡', '♢', '♣']
     RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
@@ -56,12 +62,18 @@ class Hand: #(player)
         return correctly_picked_cards #we will use this variable further down below to ADD these cards to whoever's turn it was
     
     def find_pairs(self): #check the player's deck, remove, and store the pairs in self.pairs as tuples which show the suit and rank of each card in a pair.
-        for i in self.cards:
-            for j in self.cards:
-                if i.rank == j.rank and i!=j:
-                    self.pairs.append(((i.rank, i.suit),(j.rank, j.suit)))
+        i = 0
+        while i < len(self.cards):
+            j = i+1 #the card after
+            while j < len(self.cards):
+                if self.cards[i].rank == self.cards[j].rank:
+                    self.pairs.append((self.cards[i], self.cards[j]))
                     self.cards.pop(i)
                     self.cards.pop(j)
+                    i -= 1 #the list size has been changed so we have to change the index
+                    break #we need a break statement to restart the loop on the inside
+                j+=1 #advance
+            j+=1 #advance
 
     def __str__(self):
         return " ".join(str(card) for card in self.cards) #had to look this up
@@ -109,51 +121,75 @@ class Game:
                     print("\n Your turn!")
                     time.sleep(1)
 
-                    for k in self.players:
-                        print(f"{k.name}: {len(k.cards)} cards.")
-
+                    print(f"{self.players[1].name} has {len(self.players[1].cards)} cards.")
                     time.sleep(1)
-                    print(f"\n You are picking from {previous_player.name}")
-                    time.sleep(0.4)
+
                     print(f"Your hand contains: ")
                     for card in current_player.cards:
                         print(f"{card.suit} {card.rank}")
+                    time.sleep(1)
+
+                    print(f"\n You are picking from {previous_player.name}")
                     time.sleep(0.4)
 
                     while True: #infinite loop to keep waiting for a proper input
                         try:
-                            picked_index = int(input(f"\n Please pick a card from {previous_player.name} (type 1-{len(previous_player.cards)}): ")) -1
-                            time.sleep(0.4)
-                            if 0 <= picked_index < len(previous_player.cards):
-                                break #exit loop if all works out
+                            picked_rank = input("Ask for a rank (e.g., 'A', '7'): ")
+                            rank_present = False
+                            for card in current_player.cards:
+                                if card.rank == picked_rank:
+                                    rank_present = True
+                                    break
+                            if rank_present:
+                                break
+                            else:
+                                print("You must have at least one card of that rank to ask for it.")
+
                         except:
-                            print("Invalid input, please enter a valid number.")
+                            print("Invalid input. Try again.")
 
                     
-                    picked_card = previous_player.cards.pop(picked_index)
-                    current_player.cards.append(picked_card)
-                    print(f"\n You picked {picked_card.suit} {picked_card.rank} from {previous_player.name}")
-                    self.check_winner()
+                    correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
+                    if correctly_picked_cards: #if you have picked a card correctly
+                        print(f"{previous_player.name} gives you: {', '.join(str(card) for card in correctly_picked_cards)}") #once again found this type of syntax online
+                        current_player.cards.extend(correctly_picked_cards) #extend allows you to append multiple items at once
 
-                else:
+                    else: #unsuccesful pick
+                        print(f"{previous_player.name} says: 'Go Fish!'")
+                        drawn_card = self.deck.draw_card()
+                        if drawn_card:
+                            print(f"You drew: {drawn_card}")
+                            current_player.add_card(drawn_card)
+
+                else: #opponent's turn
                     print(f"\n {current_player.name}'s turn!")
                     time.sleep(1)
 
-                    picked_card = random.choice(previous_player.cards)
-                    current_player.cards.append(picked_card)
-                    print(f"{current_player.name} picked a card from {previous_player.name}")
-                    turn+=1
-                    self.check_winner()
+                    picked_rank = random.choice(previous_player.cards).rank
+                    print(f"{current_player.name} asks: 'Do you have any {picked_rank}s?'")
+                    
+                    correctly_picked_cards = previous_player.remove_cards_by_rank(picked_rank)
+                    if correctly_picked_cards:
+                        print(f"You give {current_player.name}: {', '.join(str(card) for card in correctly_picked_cards)}")
+                        current_player.cards.extend(correctly_picked_cards)
+                    
+                    else:
+                        print("You exclaim: 'Go Fish!'")
+                        drawn_card = self.deck.draw_card()
+                        if drawn_card:
+                            print(f"{current_player.name} drew a card.")
+                            current_player.add_card(drawn_card)
 
-                current_player.remove_matches()
+                current_player.find_pairs()
                 if self.check_winner():
                     return #used to exit a function
+                turn += 1
 
 
 
 def main():
     game = Game()
-    player_names = ['You', 'Bot 1', 'Bot 2', 'Bot 3']  #Modify as needed for now
+    player_names = ['You', 'Jeremy the Fish']  #Modify as needed for now
     game.start_play(player_names)
 
 if __name__ == "__main__":

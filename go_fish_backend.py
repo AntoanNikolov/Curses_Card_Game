@@ -36,40 +36,32 @@ class Hand: #(player)
     def __init__(self, name):
         self.name = name
         self.cards = []
+        self.pairs = []
     
     def add_card(self, card): #add card object to the hand of the player
         self.cards.append(card)
     
-    def remove_card_by_rank(self, rank): #remove card object from the hand of the player at given rank. Rank is random when it is a bot's turn.
-        matching_cards = []
+    def remove_card_by_rank(self, rank): #remove card object from the hand of the player at given rank and refresh their deck. Store the card that was taken from the player in correctly_picked_cards.
+        correctly_picked_cards = []
         for card in self.cards:
-            if card.rank == rank:
-                matching_cards.append(card)
+            if card.rank == rank: #if the card the player picked exists in the opponents hand:
+                correctly_picked_cards.append(card) #grab that card from the opponent and store it in this list
+
         new_cards = []
-        for card in self.cards:
+        for card in self.cards: #remove the cards that have been picked from the opponent
             if card.rank != rank:
                 new_cards.append(card)
-        self.cards = new_cards
-        return matching_cards
-        
-        
+        self.cards = new_cards #update the deck to take removed cards into account
 
-    def remove_matches(self):
-        #sort cards to prepare for dealing with pairs
-        self.cards.sort(key=lambda x: x.rank) #found this online, rarely ever used a function like this before so I needed help
-        unpaired = []
-        i = 0
-        while i < len(self.cards)-1: #while we have not iterated through the whole list
-            if self.cards[i].rank == self.cards[i+1].rank: #checks if the cards next to each other can be paired
-                i +=2 #disregard the pair if there is one
-            
-            else:
-                unpaired.append(self.cards[i]) #only keeping the cards that do not have pairs
-                i+=1 #move ahead by one to start searching again
-        if i == len(self.cards) - 1:
-            unpaired.append(self.cards[i])
-        random.shuffle(unpaired)
-        self.cards = unpaired
+        return correctly_picked_cards #we will use this variable further down below to ADD these cards to whoever's turn it was
+    
+    def find_pairs(self): #check the player's deck, remove, and store the pairs in self.pairs as tuples which show the suit and rank of each card in a pair.
+        for i in self.cards:
+            for j in self.cards:
+                if i.rank == j.rank and i!=j:
+                    self.pairs.append(((i.rank, i.suit),(j.rank, j.suit)))
+                    self.cards.pop(i)
+                    self.cards.pop(j)
 
     def __str__(self):
         return " ".join(str(card) for card in self.cards) #had to look this up

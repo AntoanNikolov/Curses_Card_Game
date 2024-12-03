@@ -1,3 +1,3 @@
 # Curses_Card_Game
-Antoan: Transforming the Old Maid code into functional Go Fish code. Afterward, implement curses.  
+Antoan: Implementing curses into GoFish.  
 Sean: Make the frontend design look better.

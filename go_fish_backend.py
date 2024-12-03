@@ -2,10 +2,6 @@ import random #random card selections, etc.
 import time #will use this to make the game run at an enjoyable pace
 
 
-#IMPORTANT THINGS TO FIX:
-#game is running but nothing is happening (occurs when the play_turns function is called)
-#pop index out of range error
-#find_pairs function logic is flawed
 
 class Card: #we will use this class to make card objects, with wich to populate the deck.
     SUITS = ['♠', '♡', '♢', '♣']
@@ -37,7 +33,7 @@ class Deck: #When we populate the deck with all existing cards, they will be dis
         else:
             raise ValueError("No cards left in the deck to draw.")  #raise an error instead of returning None
 
-
+#################################WORKSWORKSWORKSWORKS ^^^^^^^^^^^^
 class Hand: #(player)
     def __init__(self, name):
         self.name = name
@@ -64,16 +60,17 @@ class Hand: #(player)
     def find_pairs(self): #check the player's deck, remove, and store the pairs in self.pairs as tuples which show the suit and rank of each card in a pair.
         i = 0
         while i < len(self.cards):
-            j = i+1 #the card after
+            j = i + 1 #second card
             while j < len(self.cards):
                 if self.cards[i].rank == self.cards[j].rank:
                     self.pairs.append((self.cards[i], self.cards[j]))
-                    self.cards.pop(i)
-                    self.cards.pop(j)
-                    i -= 1 #the list size has been changed so we have to change the index
-                    break #we need a break statement to restart the loop on the inside
-                j+=1 #advance
-            j+=1 #advance
+                    self.cards.remove(self.cards[j])
+                    self.cards.remove(self.cards[i])
+                    i -= 1  #adjust index to account for removed elements. This method could be flawed, I will revisit to make sure this adjustment works.
+                    break
+                else:
+                    j += 1
+            i += 1
 
     def __str__(self):
         return " ".join(str(card) for card in self.cards) #had to look this up
@@ -124,35 +121,28 @@ class Game:
                     print(f"{self.players[1].name} has {len(self.players[1].cards)} cards.")
                     time.sleep(1)
 
-                    print(f"Your hand contains: ")
-                    for card in current_player.cards:
-                        print(f"{card.suit} {card.rank}")
+                    print(f"Your hand contains: {current_player}")
                     time.sleep(1)
 
                     print(f"\n You are picking from {previous_player.name}")
                     time.sleep(0.4)
 
                     while True: #infinite loop to keep waiting for a proper input
-                        try:
-                            picked_rank = input("Ask for a rank (e.g., 'A', '7'): ")
-                            rank_present = False
-                            for card in current_player.cards:
-                                if card.rank == picked_rank:
-                                    rank_present = True
-                                    break
-                            if rank_present:
+                        picked_rank = input("Ask for a rank, present in your deck: ")
+                        valid_rank = False
+                        for card in current_player.cards:
+                            if card.rank == picked_rank:
+                                valid_rank = True
                                 break
-                            else:
-                                print("You must have at least one card of that rank to ask for it.")
-
-                        except:
-                            print("Invalid input. Try again.")
+                        if valid_rank:
+                            break
+                        print("You must have a card of that rank to ask for it.")
 
                     
                     correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
                     if correctly_picked_cards: #if you have picked a card correctly
                         print(f"{previous_player.name} gives you: {', '.join(str(card) for card in correctly_picked_cards)}") #once again found this type of syntax online
-                        current_player.cards.append(correctly_picked_cards)
+                        current_player.cards.extend(correctly_picked_cards)
 
                     else: #unsuccesful pick
                         print(f"{previous_player.name} says: 'Go Fish!'")
@@ -171,7 +161,7 @@ class Game:
                     correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
                     if correctly_picked_cards:
                         print(f"You give {current_player.name}: {', '.join(str(card) for card in correctly_picked_cards)}")
-                        current_player.cards.append(correctly_picked_cards)
+                        current_player.cards.extend(correctly_picked_cards)
                     
                     else:
                         print("You exclaim: 'Go Fish!'")

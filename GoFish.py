@@ -101,7 +101,9 @@ class Game:
     def check_winner(self):
         for player in self.players:
             if len(player.cards) == 0:
-                print(f"{player.name} has no cards left and wins!")
+                self.stdscr.clear()
+                self.stdscr.addstr(25, 13, f"{player} ran out of cards and wins!")
+                self.stdscr.refresh()
                 return True
         
         return False
@@ -113,64 +115,96 @@ class Game:
                 turn = i
                 
                 current_player = self.players[turn]
-                previous_player = self.players[(turn-1)%len(self.players)]
+                previous_player = self.players[(turn-1)%len(self.players)] #logic from when Old Maid had multiple players
 
                 if current_player.name == "You":
-                    print("\n Your turn!")
-                    time.sleep(1)
+                    self.stdscr.refresh()
+                    self.stdscr.addstr(13,0, "                                                       ")
+                    self.stdscr.addstr(13, 5, "Your turn!")
+                    self.stdscr.refresh()
 
-                    print(f"{self.players[1].name} has {len(self.players[1].cards)} cards.")
-                    time.sleep(1)
+                    self.stdscr.addstr(2,38, f"{self.players[1].name} has {len(self.players[1].cards)} cards.")
+                    self.stdscr.refresh()
 
-                    print(f"Your hand contains: {current_player}")
-                    time.sleep(1)
+                    self.stdscr.addstr(25,35,"                                                 ")
+                    self.stdscr.addstr(25, 35, f"Your hand contains: {current_player}")
+                    self.stdscr.refresh()
+                    time.sleep(2)
 
-                    print(f"\n You are picking from {previous_player.name}")
-                    time.sleep(0.4)
+                    self.stdscr.addstr(13,0,f"You are picking from {previous_player.name}")
+                    self.stdscr.refresh()
+                    time.sleep(2)
 
                     while True: #infinite loop to keep waiting for a proper input
-                        picked_rank = input("Ask for a rank, present in your deck: ")
+                        self.stdscr.addstr(13, 0, "Ask for a rank, present in your deck: ")
+                        self.stdscr.refresh()
+                        picked_rank = self.stdscr.getstr(13, 38).decode("utf-8").upper()
                         valid_rank = False
                         for card in current_player.cards:
                             if card.rank == picked_rank:
                                 valid_rank = True
                                 break
                         if valid_rank:
+                            self.stdscr.addstr(14, 0, "                                                 ")
                             break
-                        print("You must have a card of that rank to ask for it.")
+                        self.stdscr.addstr(14, 0, "You must have a card of that rank to ask for it.")
+                        self.stdscr.addstr(13,38,"         ")
+                        self.stdscr.refresh
 
                     
                     correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
                     if correctly_picked_cards: #if you have picked a card correctly
-                        print(f"{previous_player.name} gives you: {', '.join(str(card) for card in correctly_picked_cards)}") #once again found this type of syntax online
+                        self.stdscr.addstr(13,0,"                                           ")
+                        self.stdscr.addstr(13, 0, f"{previous_player.name} gives you: {', '.join(str(card) for card in correctly_picked_cards)}") #once again found this type of syntax online
+                        self.stdscr.refresh()
                         current_player.cards.extend(correctly_picked_cards) #inneficient due to using a list, but I will keep this since it works. I had forgotten we can only ask for one card at a time.
 
                     else: #unsuccesful pick
-                        print(f"{previous_player.name} says: 'Go Fish!'")
+                        self.stdscr.addstr(13,0,"                                           ")
+                        self.stdscr.addstr(13,0, f"{previous_player.name} says: 'Go Fish!'")
+                        self.stdscr.refresh()
+                        time.sleep(1)
+
                         drawn_card = self.deck.draw_card()
                         if drawn_card: #might be redundant, will remove later
-                            print(f"You drew: {drawn_card}")
+                            self.stdscr.addstr(13,0,"                                           ")
+                            self.stdscr.addstr(13,0, f"You drew: {drawn_card}")
+                            self.stdscr.refresh()
+                            time.sleep(2)
                             current_player.add_card(drawn_card)
 
                 else: #opponent's turn
-                    print(f"\n {current_player.name}'s turn!")
-                    time.sleep(1)
+                    self.stdscr.addstr(13,0,"                                           ")
+                    self.stdscr.addstr(13,0, f"{current_player.name}'s turn!")
+                    self.stdscr.refresh()
+                    time.sleep(2)
 
                     picked_rank = random.choice(current_player.cards).rank
-                    print(f"{current_player.name} asks: 'Do you have any {picked_rank}s?'")
-                    time.sleep(0.4)
+                    self.stdscr.addstr(13,0,"                                           ")
+                    self.stdscr.addstr(13,0, f"{current_player.name} asks: 'Do you have any {picked_rank}s?'")
+                    self.stdscr.refresh()
+                    time.sleep(2)
                     
                     correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
                     if correctly_picked_cards:
-                        print(f"You give {current_player.name}: {', '.join(str(card) for card in correctly_picked_cards)}")
+                        self.stdscr.addstr(13,0,"                                           ")
+                        self.stdscr.addstr(13, 0, f"You give {current_player.name}: {', '.join(str(card) for card in correctly_picked_cards)}")
+                        self.stdscr.refresh()
+                        time.sleep(2)
                         current_player.cards.extend(correctly_picked_cards) #inneficient due to using a list, but I will keep this since it works. I had forgotten we can only ask for one card at a time.
                     
                     else:
-                        print("You exclaim: 'Go Fish!'")
+                        self.stdscr.addstr(13,0,"                                           ")
+                        self.stdscr.addstr(13, 0, "You exclaim: 'Go Fish!'")
+                        self.stdscr.refresh()
+                        time.sleep(2)
                         drawn_card = self.deck.draw_card()
                         if drawn_card:
-                            print(f"{current_player.name} drew a card.")
+                            self.stdscr.addstr(13,0,"                                           ")
+                            self.stdscr.addstr(13, 0, f"{current_player.name} drew a card.")
+                            self.stdscr.refresh()
                             current_player.add_card(drawn_card)
+                            time.sleep(2)
 
                 current_player.find_pairs()
             
@@ -178,7 +212,11 @@ class Game:
                 for i in self.players:
                     all_pairs.extend(i.pairs)
                 
-                print(f"All pairs are {all_pairs}")
+                self.stdscr.addstr(25,35,"                                                 ") #these two lines appear twice to ensure the hand updates immediately. Inneficient.
+                self.stdscr.addstr(25, 35, f"Your hand contains: {current_player}")
+
+                self.stdscr.addstr(15, 0, f"All pairs: {all_pairs}")
+                self.stdscr.refresh()
 
                 if self.check_winner():
                     return #used to exit a function
@@ -186,7 +224,8 @@ class Game:
 
 
 def main(stdscr):
-    curses.curs_set(0) #hide cursor
+    curses.echo() #show user input
+    curses.curs_set(1) #hide cursor
     stdscr.clear() #clear the screen
     game = Game(stdscr)
     game.start_play(["You", "Jeremy the Fish"])

@@ -2,7 +2,7 @@ import random #random card selections, etc.
 import time #will use this to make the game run at an enjoyable pace
 import curses
 
-
+#TODO: Make it so all of the pairs appear as soon as the game begins
 
 class Card: #we will use this class to make card objects, with wich to populate the deck.
     SUITS = ['♠', '♡', '♢', '♣']

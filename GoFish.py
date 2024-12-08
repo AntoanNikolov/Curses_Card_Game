@@ -160,21 +160,21 @@ class Game:
                         current_player.cards.extend(correctly_picked_cards) #inneficient due to using a list, but I will keep this since it works. I had forgotten we can only ask for one card at a time.
 
                     else: #unsuccesful pick
-                        self.stdscr.addstr(13,0,"                         ")
+                        self.stdscr.addstr(13,0,"                                ")
                         self.stdscr.addstr(13,0, f"{previous_player.name} says: 'Go Fish!'")
                         self.stdscr.refresh()
                         time.sleep(1)
 
                         drawn_card = self.deck.draw_card()
                         if drawn_card: #might be redundant, will remove later
-                            self.stdscr.addstr(13,0,"                           ")
+                            self.stdscr.addstr(13,0,"                                 ")
                             self.stdscr.addstr(13,0, f"You drew: {drawn_card}")
                             self.stdscr.refresh()
                             time.sleep(2)
                             current_player.add_card(drawn_card)
 
                 else: #opponent's turn
-                    self.stdscr.addstr(13,0,"                        ")
+                    self.stdscr.addstr(13,0,"                               ")
                     self.stdscr.addstr(13,0, f"{current_player.name}'s turn!")
                     self.stdscr.refresh()
                     time.sleep(2)
@@ -187,14 +187,14 @@ class Game:
                     
                     correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
                     if correctly_picked_cards:
-                        self.stdscr.addstr(13,0,"                              ")
+                        self.stdscr.addstr(13,0,"                                   ")
                         self.stdscr.addstr(13, 0, f"You give {current_player.name}: {', '.join(str(card) for card in correctly_picked_cards)}")
                         self.stdscr.refresh()
                         time.sleep(2)
                         current_player.cards.extend(correctly_picked_cards) #inneficient due to using a list, but I will keep this since it works. I had forgotten we can only ask for one card at a time.
                     
                     else:
-                        self.stdscr.addstr(13,0,"                           ")
+                        self.stdscr.addstr(13,0,"                              ")
                         self.stdscr.addstr(13, 0, "You exclaim: 'Go Fish!'")
                         self.stdscr.refresh()
                         time.sleep(2)
@@ -212,7 +212,7 @@ class Game:
                 for i in self.players:
                     all_pairs.extend(i.pairs)
                 
-                self.stdscr.addstr(23,10,"                          ") #these two lines appear twice to ensure the hand updates immediately. Inneficient.
+                self.stdscr.addstr(23,10,"                              ") #these two lines appear twice to ensure the hand updates immediately. Inneficient.
                 self.stdscr.addstr(23, 0, f"Your hand: {current_player}")
                 
                 self.stdscr.addstr(15, 0, f"All pairs: {all_pairs}")

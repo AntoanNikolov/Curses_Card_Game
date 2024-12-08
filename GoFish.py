@@ -136,7 +136,7 @@ class Game:
                     time.sleep(2)
 
                     while True: #infinite loop to keep waiting for a proper input
-                        self.stdscr.addstr(13, 0, "Ask for a rank: ")
+                        self.stdscr.addstr(13, 0, "Ask for a rank, present in your deck: ")
                         self.stdscr.refresh()
                         picked_rank = self.stdscr.getstr(13, 38).decode("utf-8").upper()
                         valid_rank = False

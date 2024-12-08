@@ -102,9 +102,9 @@ class Game:
         for player in self.players:
             if len(player.cards) == 0:
                 self.stdscr.clear()
-                self.stdscr.addstr(12, 0, f"{player} ran out of cards and wins!")
-                time.sleep(2)
+                self.stdscr.addstr(12, 0, f"{player.name} ran out of cards and won!")
                 self.stdscr.refresh()
+                time.sleep(5)
                 return True
         
         return False
@@ -117,7 +117,10 @@ class Game:
                 
                 current_player = self.players[turn]
                 previous_player = self.players[(turn-1)%len(self.players)] #logic from when Old Maid had multiple players
-
+                
+                if self.check_winner():
+                    return #used to exit a function
+                
                 if current_player.name == "You":
                     self.stdscr.refresh()
                     self.stdscr.addstr(13,0, "                               ")
@@ -216,7 +219,7 @@ class Game:
                 self.stdscr.addstr(15, 0, f"All pairs: {all_pairs}")
                 self.stdscr.refresh()
 
-                if self.check_winner():
+                if self.check_winner(): #checking twice, before and after a turn, just in case.
                     return #used to exit a function
 
 

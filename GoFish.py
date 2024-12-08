@@ -136,7 +136,7 @@ class Game:
                     time.sleep(2)
 
                     while True: #infinite loop to keep waiting for a proper input
-                        self.stdscr.addstr(13, 0, "Ask for a rank, present in your deck: ")
+                        self.stdscr.addstr(13, 0, "Ask for a rank: ")
                         self.stdscr.refresh()
                         picked_rank = self.stdscr.getstr(13, 38).decode("utf-8").upper()
                         valid_rank = False
@@ -147,7 +147,7 @@ class Game:
                         if valid_rank:
                             self.stdscr.addstr(14, 0, "                            ")
                             break
-                        self.stdscr.addstr(14, 0, "You must have a card of that rank to ask for it.")
+                        self.stdscr.addstr(14, 0, "Invalid rank. Try again.")
                         self.stdscr.addstr(13,38,"         ")
                         self.stdscr.refresh
 
@@ -181,7 +181,7 @@ class Game:
 
                     picked_rank = random.choice(current_player.cards).rank
                     self.stdscr.addstr(13,0,"                             ")
-                    self.stdscr.addstr(13,0, f"{current_player.name} asks: 'Do you have any {picked_rank}s?'")
+                    self.stdscr.addstr(13,0, f"{current_player.name} asks for {picked_rank}")
                     self.stdscr.refresh()
                     time.sleep(2)
                     

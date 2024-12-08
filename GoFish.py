@@ -102,7 +102,8 @@ class Game:
         for player in self.players:
             if len(player.cards) == 0:
                 self.stdscr.clear()
-                self.stdscr.addstr(25, 0, f"{player} ran out of cards and wins!")
+                self.stdscr.addstr(12, 0, f"{player} ran out of cards and wins!")
+                time.sleep(2)
                 self.stdscr.refresh()
                 return True
         
@@ -171,7 +172,7 @@ class Game:
                             current_player.add_card(drawn_card)
 
                 else: #opponent's turn
-                    self.stdscr.addstr(13,0,"                                      ")
+                    self.stdscr.addstr(13,0,"                                           ")
                     self.stdscr.addstr(13,0, f"{current_player.name}'s turn!")
                     self.stdscr.refresh()
                     time.sleep(2)

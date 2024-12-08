@@ -63,7 +63,7 @@ class Hand: #(player)
             j = i + 1 #second card
             while j < len(self.cards):
                 if self.cards[i].rank == self.cards[j].rank:
-                    self.pairs.append((self.cards[i].rank, self.cards[i].suit))
+                    self.pairs.append((self.cards[i].rank, f"{self.cards[i].suit}/{self.cards[j].suit}"))
                     self.cards.remove(self.cards[j])
                     self.cards.remove(self.cards[i])
                     i -= 1  #adjust index to account for removed elements. This method could be flawed, I will revisit to make sure this adjustment works.
@@ -102,7 +102,7 @@ class Game:
         for player in self.players:
             if len(player.cards) == 0:
                 self.stdscr.clear()
-                self.stdscr.addstr(25, 13, f"{player} ran out of cards and wins!")
+                self.stdscr.addstr(25, 0, f"{player} ran out of cards and wins!")
                 self.stdscr.refresh()
                 return True
         
@@ -120,14 +120,14 @@ class Game:
                 if current_player.name == "You":
                     self.stdscr.refresh()
                     self.stdscr.addstr(13,0, "                                                       ")
-                    self.stdscr.addstr(13, 5, "Your turn!")
+                    self.stdscr.addstr(13, 0, "Your turn!")
                     self.stdscr.refresh()
 
-                    self.stdscr.addstr(2,38, f"{self.players[1].name} has {len(self.players[1].cards)} cards.")
+                    self.stdscr.addstr(2,0, f"{self.players[1].name} has {len(self.players[1].cards)} cards.")
                     self.stdscr.refresh()
 
-                    self.stdscr.addstr(25,35,"                                                 ")
-                    self.stdscr.addstr(25, 35, f"Your hand contains: {current_player}")
+                    self.stdscr.addstr(25,10,"                                       ")
+                    self.stdscr.addstr(25, 0, f"Your hand: {current_player}")
                     self.stdscr.refresh()
                     time.sleep(2)
 
@@ -212,9 +212,9 @@ class Game:
                 for i in self.players:
                     all_pairs.extend(i.pairs)
                 
-                self.stdscr.addstr(25,35,"                                                 ") #these two lines appear twice to ensure the hand updates immediately. Inneficient.
-                self.stdscr.addstr(25, 35, f"Your hand contains: {current_player}")
-
+                self.stdscr.addstr(25,10,"                                                 ") #these two lines appear twice to ensure the hand updates immediately. Inneficient.
+                self.stdscr.addstr(25, 0, f"Your hand: {current_player}")
+                
                 self.stdscr.addstr(15, 0, f"All pairs: {all_pairs}")
                 self.stdscr.refresh()
 

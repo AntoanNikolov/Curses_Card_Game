@@ -126,8 +126,8 @@ class Game:
                     self.stdscr.addstr(2,0, f"{self.players[1].name} has {len(self.players[1].cards)} cards.")
                     self.stdscr.refresh()
 
-                    self.stdscr.addstr(24,10,"                             ")
-                    self.stdscr.addstr(24, 0, f"Your hand: {current_player}")
+                    self.stdscr.addstr(23,10,"                             ")
+                    self.stdscr.addstr(23, 0, f"Your hand: {current_player}")
                     self.stdscr.refresh()
                     time.sleep(2)
 
@@ -212,8 +212,8 @@ class Game:
                 for i in self.players:
                     all_pairs.extend(i.pairs)
                 
-                self.stdscr.addstr(24,10,"                          ") #these two lines appear twice to ensure the hand updates immediately. Inneficient.
-                self.stdscr.addstr(24, 0, f"Your hand: {current_player}")
+                self.stdscr.addstr(23,10,"                          ") #these two lines appear twice to ensure the hand updates immediately. Inneficient.
+                self.stdscr.addstr(23, 0, f"Your hand: {current_player}")
                 
                 self.stdscr.addstr(15, 0, f"All pairs: {all_pairs}")
                 self.stdscr.refresh()

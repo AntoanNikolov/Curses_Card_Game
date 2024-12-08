@@ -154,27 +154,24 @@ class Game:
                     
                     correctly_picked_cards = previous_player.remove_card_by_rank(picked_rank)
                     if correctly_picked_cards: #if you have picked a card correctly
-                        self.stdscr.addstr(13,0,"                        ")
-                        self.stdscr.addstr(13, 0, f"{previous_player.name} gives you: {', '.join(str(card) for card in correctly_picked_cards)}") #once again found this type of syntax online
-                        self.stdscr.refresh()
-                        current_player.cards.extend(correctly_picked_cards) #inneficient due to using a list, but I will keep this since it works. I had forgotten we can only ask for one card at a time.
+                        current_player.cards.extend(correctly_picked_cards)
 
                     else: #unsuccesful pick
-                        self.stdscr.addstr(13,0,"                                      ")
+                        self.stdscr.addstr(13,0,"                                          ")
                         self.stdscr.addstr(13,0, f"{previous_player.name} says: 'Go Fish!'")
                         self.stdscr.refresh()
                         time.sleep(1)
 
                         drawn_card = self.deck.draw_card()
                         if drawn_card: #might be redundant, will remove later
-                            self.stdscr.addstr(13,0,"                                       ")
+                            self.stdscr.addstr(13,0,"                                           ")
                             self.stdscr.addstr(13,0, f"You drew: {drawn_card}")
                             self.stdscr.refresh()
                             time.sleep(2)
                             current_player.add_card(drawn_card)
 
                 else: #opponent's turn
-                    self.stdscr.addstr(13,0,"                                  ")
+                    self.stdscr.addstr(13,0,"                                      ")
                     self.stdscr.addstr(13,0, f"{current_player.name}'s turn!")
                     self.stdscr.refresh()
                     time.sleep(2)
